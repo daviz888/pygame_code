@@ -1,4 +1,5 @@
 import sys
+import os
 import pygame
 
 class Settings():
@@ -15,5 +16,9 @@ class Settings():
         self.RED = (255, 0, 0)
         self.BLUE = (0, 0, 255)
         self.GREEN= (0, 255, 0)
+
+        # setup asset folders
+        self.game_path = os.path.dirname(__file__)
+        self.images_path = os.path.join(self.game_path,'images')
 
     # def loadImage(self,)
