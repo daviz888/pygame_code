@@ -7,6 +7,7 @@ import random
 
 from settings import Settings
 from player import Player
+from mob import Mob
 
 
 # load game settings.
@@ -25,8 +26,12 @@ clock = pygame.time.Clock()
 
 all_sprites = Group()
 player = Player(ui_settings)
+mobs = Group()
 all_sprites.add(player)
-
+for i in range(8):
+    m = Mob(ui_settings)
+    all_sprites.add(m)
+    mobs.add(m)
 
 # Game loop
 running = True
