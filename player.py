@@ -5,6 +5,7 @@ import os
 import pygame
 from pygame.sprite import Sprite
 import random
+from bullet import Bullet
 
 class Player(Sprite):
     """sprite for Player."""
@@ -40,3 +41,7 @@ class Player(Sprite):
             self.rect.top = 0
         if self.rect.bottom >= self.ui_settings.HEIGHT:
             self.rect.bottom = self.ui_settings.HEIGHT
+
+    def bullet(self):
+        bullet = Bullet(self.ui_settings, self.rect.centerx, self.rect.top)
+        return bullet

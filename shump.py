@@ -8,7 +8,7 @@ import random
 from settings import Settings
 from player import Player
 from mob import Mob
-
+from bullet import Bullet
 
 # load game settings.
 ui_settings = Settings()
@@ -27,6 +27,7 @@ clock = pygame.time.Clock()
 all_sprites = Group()
 player = Player(ui_settings)
 mobs = Group()
+bullets = Group()
 all_sprites.add(player)
 for i in range(8):
     m = Mob(ui_settings)
@@ -43,8 +44,26 @@ while running:
         # check for closing the window
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                # modify it later.
+                all_sprites.add(player.bullet())
+                bullets.add(player.bullet())
     # Updated
     all_sprites.update()
+
+    collilions = pygame.sprite.groupcollide(mobs, bullets, True, True)
+    for collide in collilions:
+        m = Mob(ui_settings)
+        all_sprites.add(m)
+        mobs.add(m)
+
+    # check to see if mob hit the ships.
+    hits = pygame.sprite.spritecollide(player, mobs, False)
+
+    if hits:
+        running = False
+
     # Draw / render
     screen.fill(ui_settings.BLACK)
     all_sprites.draw(screen)
