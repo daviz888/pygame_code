@@ -12,9 +12,12 @@ class Player(Sprite):
     def __init__(self, ui_settings):
         super().__init__()
         self.ui_settings = ui_settings
-        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'fighter.png')).convert()
+        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'fighter.png')).convert_alpha()
+        self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'explosion.ogg'))
         self.image.set_colorkey(ui_settings.WHITE)
         self.rect = self.image.get_rect()
+        self.radius = int(self.rect.width * .80 / 2)
+        # pygame.draw.circle(self.image, ui_settings.RED, self.rect.center, self.radius)
         self.img_size = self.image.get_size()
         self.rect.centerx = (ui_settings.WIDTH / 2)
         self.rect.bottom = ui_settings.HEIGHT
@@ -41,7 +44,3 @@ class Player(Sprite):
             self.rect.top = 0
         if self.rect.bottom >= self.ui_settings.HEIGHT:
             self.rect.bottom = self.ui_settings.HEIGHT
-
-    def bullet(self):
-        bullet = Bullet(self.ui_settings, self.rect.centerx, self.rect.top)
-        return bullet
