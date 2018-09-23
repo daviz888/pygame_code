@@ -32,8 +32,14 @@ class Settings():
         self.lives_limit = 3
 
         # Set sound effects
-        pygame.mixer.music.load(os.path.join(self.sfx_path, 'intro.ogg'))
+        self.backgroundMusic = pygame.mixer.music.load(os.path.join(self.sfx_path, 'intro.ogg'))
+        # self.backgroundMusic.set_volume(0.1)
         pygame.mixer.music.set_volume(0.1)
+
+        # Define life Bars.
+        self.LIFE_BAR_LENGTH = 100
+        self.LIFE_BAR_HEIGHT = 10
+
 
     def play_music(self):
         pygame.mixer.music.play(-1)

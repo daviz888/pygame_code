@@ -22,6 +22,12 @@ class Player(Sprite):
         self.rect.centerx = (ui_settings.WIDTH / 2)
         self.rect.bottom = ui_settings.HEIGHT
         self.seedx = 0
+        self.shield = 100
+
+    def rotate(self):
+        self.rot = 0
+        self.rot_speed = random.randrange(-8, 8)
+        self.last_update = pygame.tim
 
     def update(self):
         # self.rect.top -= 3

@@ -18,6 +18,7 @@ class Scoreboard():
 
 		# Prepare the initial image.
 		self.prep_score()
+		self.prep_shield_bar()
 
 
 	def prep_score(self):
@@ -30,8 +31,20 @@ class Scoreboard():
 		self.score_rect.right = self.screen_rect.right - 20
 		self.score_rect.top = 20
 
-	def show_score(self):
+	def prep_shield_bar(self):
+		"""Life bar indicator"""
+		if self.stats.life_percentage < 0:
+			self.stats.life_percentage = 0
+		self.fill = (self.stats.life_percentage / 100) * self.ui_settings.LIFE_BAR_LENGTH
+		self.outline_rect = pygame.Rect(5, 5, self.ui_settings.LIFE_BAR_LENGTH, self.ui_settings.LIFE_BAR_HEIGHT)
+		self.fill_rect = pygame.Rect(5, 5, self.fill, self.ui_settings.LIFE_BAR_HEIGHT)
+
+	def show_scoreboard(self):
 		""" Draw the score to the screen."""
 		self.screen.blit(self.score_image, self.score_rect)
+		pygame.draw.rect(self.screen, self.ui_settings.GREEN, self.fill_rect)
+		pygame.draw.rect(self.screen, self.ui_settings.WHITE, self.outline_rect, 2)
+		
+
 
 		

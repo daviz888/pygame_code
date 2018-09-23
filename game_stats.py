@@ -19,3 +19,4 @@ class Game_Stats():
 		self.lives_left = self.ui_settings.lives_limit
 		self.score = 0
 		self.level = 1
+		self.life_percentage = 100

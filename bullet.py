@@ -22,6 +22,7 @@ class Bullet(Sprite):
         self.rect.centerx = self.ship_rect.centerx
         self.speedy = -10
         self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'sfx_laser2.ogg'))
+        self.effects.set_volume(0.1)
 
     def update(self):
         self.rect.y += self.speedy

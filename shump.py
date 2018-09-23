@@ -26,9 +26,24 @@ screen = pygame.display.set_mode((ui_settings.WIDTH, ui_settings.HEIGHT))
 pygame.display.set_caption("Shmup Game")
 clock = pygame.time.Clock()
 
+
+
+# Background & explosion images
 background = pygame.image.load(os.path.join(ui_settings.images_path, 'space.png')).convert()
 background = pygame.transform.scale(background, (ui_settings.WIDTH, ui_settings.HEIGHT))
 background_rect = background.get_rect()
+
+ship_explode_sheet = pygame.image.load(os.path.join(ui_settings.images_path, 'explosionframes.png')).convert()
+ship_explode_sheet.set_colorkey(ui_settings.BLACK)
+
+mob_explose_sheet = pygame.image.load(os.path.join(ui_settings.images_path,'explosion.png')).convert_alpha()
+
+# Spawn new mob.
+def newMob():
+    m = Mob(ui_settings)
+    all_sprites.add(m)
+    mobs.add(m)
+
 
 # play background music.
 ui_settings.play_music()
@@ -43,9 +58,7 @@ mobs = Group()
 bullets = Group()
 all_sprites.add(player)
 for i in range(8):
-    m = Mob(ui_settings)
-    all_sprites.add(m)
-    mobs.add(m)
+    newMob()
 
 # Game loop
 running = True
@@ -70,25 +83,36 @@ while running:
     for hit in hits:
         stats.score += 50 - hit.radius
         score_board.prep_score()
-        m.effects.play()
-        explode = Explosion(ui_settings, 64, 64, hit.rect.center) 
+        explode = Explosion(ui_settings, mob_explose_sheet, 64, 64, hit.rect.center)
+        explode.effects.play()
         all_sprites.add(explode)
         m = Mob(ui_settings)
         all_sprites.add(m)
         mobs.add(m)
 
     # check to see if mob hit the ships.
-    hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
+    hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
 
-    if hits:
-        player.effects.play()
+    for hit in hits:
+        player.shield -= hit.radius
+        stats.life_percentage = player.shield
+        score_board.prep_shield_bar()
+        newMob()
+
+        if player.shield <= 0:
+            ship_explode = Explosion(ui_settings, ship_explode_sheet, 64, 64, hit.rect.center)
+            player.effects.play()
+            all_sprites.add(ship_explode)
+            player.kill()
+
+    if not player.alive() and not ship_explode.alive():
         running = False
 
     # Draw / render
     screen.fill(ui_settings.BLACK)
     screen.blit(background, background_rect)
     all_sprites.draw(screen)
-    score_board.show_score()
+    score_board.show_scoreboard()
     # after drawing everything, flip the display
     pygame.display.flip()
 
