@@ -25,7 +25,7 @@ class Explosion(Sprite):
 		self.last_update = pygame.time.get_ticks()
 		self.frame_rate = 50
 		# Explosion Effects
-		self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'expl1.ogg'))
+		self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'rumble1.ogg'))
 		self.effects.set_volume(0.1)
 
 	def prep_sheet(self):

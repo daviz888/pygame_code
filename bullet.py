@@ -14,7 +14,7 @@ class Bullet(Sprite):
         super().__init__()
         self.ui_settings = ui_settings
         self.ship = player
-        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'laserRed16.png')).convert()
+        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'shot1.png')).convert()
         # self.image.set_colorkey(self.ui_settings.WHITE)
         self.rect = self.image.get_rect()
         self.ship_rect = self.ship.rect
@@ -25,6 +25,7 @@ class Bullet(Sprite):
         self.effects.set_volume(0.1)
 
     def update(self):
+        # self.rect.x += 10
         self.rect.y += self.speedy
         # kill if it moves off the top of the screenself.
         if self.rect.bottom < 0:

@@ -11,7 +11,7 @@ class Mob(Sprite):
     def __init__(self, ui_settings):
         super().__init__()
         self.ui_settings = ui_settings
-        self.file_name = str(random.randrange(0,6)) + '.png'
+        self.file_name = str(random.randrange(0,9)) + '.png'
         self.image = pygame.image.load(os.path.join(ui_settings.images_path, self.file_name)).convert_alpha()
         self.image = pygame.transform.scale(self.image,(40, 40))
         # self.image.set_colorkey(ui_settings.BLACK)
@@ -32,4 +32,3 @@ class Mob(Sprite):
             self.rect.x = random.randrange(self.ui_settings.WIDTH)
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 8)
-

@@ -50,12 +50,13 @@ ui_settings.play_music()
 
 # Create instance of the game and statistics.
 stats = Game_Stats(ui_settings)
-score_board = Scoreboard(ui_settings, screen, stats)
+
 
 all_sprites = Group()
 player = Player(ui_settings)
 mobs = Group()
 bullets = Group()
+score_board = Scoreboard(ui_settings, screen, stats, player)
 all_sprites.add(player)
 for i in range(8):
     newMob()
@@ -78,7 +79,7 @@ while running:
                 bullets.add(bullet)
     # Updated
     all_sprites.update()
-
+    # mobs and bullets collision.
     hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
     for hit in hits:
         stats.score += 50 - hit.radius
@@ -92,20 +93,25 @@ while running:
 
     # check to see if mob hit the ships.
     hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
-
     for hit in hits:
         player.shield -= hit.radius
-        stats.life_percentage = player.shield
+        explode = Explosion(ui_settings, mob_explose_sheet, 64, 64, hit.rect.center)
+        explode.effects.play()
+        all_sprites.add(explode)
+        # stats.life_percentage = player.shield
         score_board.prep_shield_bar()
         newMob()
-
+        print(player.shield)
         if player.shield <= 0:
             ship_explode = Explosion(ui_settings, ship_explode_sheet, 64, 64, hit.rect.center)
             player.effects.play()
             all_sprites.add(ship_explode)
-            player.kill()
+            player.hide()
+            stats.lives_left -= 1
+            player.shield = 100
 
-    if not player.alive() and not ship_explode.alive():
+    # Check if the player live is 0
+    if stats.lives_left == 0 and not ship_explode.alive():
         running = False
 
     # Draw / render

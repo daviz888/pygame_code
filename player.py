@@ -12,8 +12,8 @@ class Player(Sprite):
     def __init__(self, ui_settings):
         super().__init__()
         self.ui_settings = ui_settings
-        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'fighter.png')).convert_alpha()
-        self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'explosion.ogg'))
+        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'playerShip.png')).convert_alpha()
+        self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'expl1.ogg'))
         self.image.set_colorkey(ui_settings.WHITE)
         self.rect = self.image.get_rect()
         self.radius = int(self.rect.width * .80 / 2)
@@ -23,6 +23,8 @@ class Player(Sprite):
         self.rect.bottom = ui_settings.HEIGHT
         self.seedx = 0
         self.shield = 100
+        self.hidden = False
+        self.hide_timer = pygame.time.get_ticks()
 
     def rotate(self):
         self.rot = 0
@@ -31,6 +33,11 @@ class Player(Sprite):
 
     def update(self):
         # self.rect.top -= 3
+        # undide ship if hiddenself.
+        if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
+            self.hidden = False
+            self.rect.centerx = (self.ui_settings.WIDTH / 2)
+            self.rect.bottom = self.ui_settings.HEIGHT
         self.speedx = 0
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_LEFT]:
@@ -50,3 +57,8 @@ class Player(Sprite):
             self.rect.top = 0
         if self.rect.bottom >= self.ui_settings.HEIGHT:
             self.rect.bottom = self.ui_settings.HEIGHT
+
+    def hide(self):
+        self.hidden = True
+        self.hide_timer = pygame.time.get_ticks()
+        self.rect.center = (self.ui_settings.WIDTH / 2, self.ui_settings.HEIGHT + 200)
