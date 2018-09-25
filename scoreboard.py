@@ -38,6 +38,8 @@ class Scoreboard():
 		self.fill = (self.player.shield / 100) * self.ui_settings.LIFE_BAR_LENGTH
 		self.outline_rect = pygame.Rect(5, 30, self.ui_settings.LIFE_BAR_LENGTH, self.ui_settings.LIFE_BAR_HEIGHT)
 		self.fill_rect = pygame.Rect(5, 30, self.fill, self.ui_settings.LIFE_BAR_HEIGHT)
+		pygame.draw.rect(self.screen, self.ui_settings.GREEN, self.fill_rect)
+		pygame.draw.rect(self.screen, self.ui_settings.WHITE, self.outline_rect, 2)
 
 	def prep_ships(self):
 		scale = (30,23)
@@ -50,6 +52,7 @@ class Scoreboard():
 	def show_scoreboard(self):
 		""" Draw the score to the screen."""
 		self.prep_ships()
+		self.prep_shield_bar()
 		self.screen.blit(self.score_image, self.score_rect)
-		pygame.draw.rect(self.screen, self.ui_settings.GREEN, self.fill_rect)
-		pygame.draw.rect(self.screen, self.ui_settings.WHITE, self.outline_rect, 2)
+		# pygame.draw.rect(self.screen, self.ui_settings.GREEN, self.fill_rect)
+		# pygame.draw.rect(self.screen, self.ui_settings.WHITE, self.outline_rect, 2)

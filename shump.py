@@ -99,7 +99,7 @@ while running:
         explode.effects.play()
         all_sprites.add(explode)
         # stats.life_percentage = player.shield
-        score_board.prep_shield_bar()
+        # score_board.prep_shield_bar()
         newMob()
         print(player.shield)
         if player.shield <= 0:
@@ -117,8 +117,8 @@ while running:
     # Draw / render
     screen.fill(ui_settings.BLACK)
     screen.blit(background, background_rect)
-    all_sprites.draw(screen)
     score_board.show_scoreboard()
+    all_sprites.draw(screen)
     # after drawing everything, flip the display
     pygame.display.flip()
 
