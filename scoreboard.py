@@ -49,10 +49,11 @@ class Scoreboard():
 			self.screen.blit(self.ship, location)
 
 
+
 	def show_scoreboard(self):
 		""" Draw the score to the screen."""
+		if self.stats.lives_left > 0:
+			self.prep_shield_bar()
 		self.prep_ships()
-		self.prep_shield_bar()
 		self.screen.blit(self.score_image, self.score_rect)
-		# pygame.draw.rect(self.screen, self.ui_settings.GREEN, self.fill_rect)
-		# pygame.draw.rect(self.screen, self.ui_settings.WHITE, self.outline_rect, 2)
+		

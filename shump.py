@@ -13,6 +13,7 @@ from player import Player
 from mob import Mob
 from bullet import Bullet
 from explosion import Explosion
+from powerup import Powerup
 
 # load game settings.
 ui_settings = Settings()
@@ -27,18 +28,21 @@ pygame.display.set_caption("Shmup Game")
 clock = pygame.time.Clock()
 
 
-
 # Background & explosion images
 background = pygame.image.load(os.path.join(ui_settings.images_path, 'space.png')).convert()
 background = pygame.transform.scale(background, (ui_settings.WIDTH, ui_settings.HEIGHT))
 background_rect = background.get_rect()
 
-ship_explode_sheet = pygame.image.load(os.path.join(ui_settings.images_path, 'explosionframes.png')).convert()
+ship_explode_sheet = pygame.image.load(os.path.join(
+    ui_settings.images_path, 'explosionframes.png')).convert()
 ship_explode_sheet.set_colorkey(ui_settings.BLACK)
 
-mob_explose_sheet = pygame.image.load(os.path.join(ui_settings.images_path,'explosion.png')).convert_alpha()
+mob_explose_sheet = pygame.image.load(os.path.join(
+    ui_settings.images_path, 'explosion.png')).convert_alpha()
 
 # Spawn new mob.
+
+
 def newMob():
     m = Mob(ui_settings)
     all_sprites.add(m)
@@ -49,21 +53,30 @@ def newMob():
 ui_settings.play_music()
 
 # Create instance of the game and statistics.
-stats = Game_Stats(ui_settings)
+stats = Game_Stats(ui_settings, screen)
 
-
-all_sprites = Group()
-player = Player(ui_settings)
-mobs = Group()
-bullets = Group()
-score_board = Scoreboard(ui_settings, screen, stats, player)
-all_sprites.add(player)
-for i in range(8):
-    newMob()
 
 # Game loop
+game_over = True
 running = True
 while running:
+    if game_over:
+        screen.blit(background, background_rect)
+        stats.welcome_screen()
+        stats.reset_stats()
+        print("Game Start")
+        game_over = False
+        print(stats.waiting)
+        all_sprites = Group()
+        player = Player(ui_settings)
+        mobs = Group()
+        bullets = Group()
+        powers = Group()
+        score_board = Scoreboard(ui_settings, screen, stats, player)
+        all_sprites.add(player)
+        for i in range(8):
+            newMob()
+
     # keep loop running at the right speed
     clock.tick(ui_settings.FPS)
     # Process inputs(events)
@@ -73,10 +86,11 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                bullet = Bullet(ui_settings, player)
-                bullet.effects.play()
-                all_sprites.add(bullet)
-                bullets.add(bullet)
+                player.shoot()
+                for bullet in player.bullets:
+                    all_sprites.add(bullet)
+                    bullets.add(bullet)
+
     # Updated
     all_sprites.update()
     # mobs and bullets collision.
@@ -87,9 +101,27 @@ while running:
         explode = Explosion(ui_settings, mob_explose_sheet, 64, 64, hit.rect.center)
         explode.effects.play()
         all_sprites.add(explode)
+        # Randomize the chances of getting a powerupsself.
+        if random.random() > 0.9:
+            power = Powerup(ui_settings, hit.rect.center)
+            all_sprites.add(power)
+            powers.add(power)
         m = Mob(ui_settings)
         all_sprites.add(m)
         mobs.add(m)
+
+    # Check if the ship hit the powersself.
+    powerhits = pygame.sprite.spritecollide(player, powers, True)
+    if powerhits:
+        for hit in powerhits:
+            hit.effects.play()
+            if hit.power_type == 'shield':
+                player.shield += random.randrange(10, 20)
+                if player.shield >= 100:
+                    player.shield = 100
+
+            elif hit.power_type == 'gun':
+                player.powerup()
 
     # check to see if mob hit the ships.
     hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
@@ -101,7 +133,6 @@ while running:
         # stats.life_percentage = player.shield
         # score_board.prep_shield_bar()
         newMob()
-        print(player.shield)
         if player.shield <= 0:
             ship_explode = Explosion(ui_settings, ship_explode_sheet, 64, 64, hit.rect.center)
             player.effects.play()
@@ -112,7 +143,7 @@ while running:
 
     # Check if the player live is 0
     if stats.lives_left == 0 and not ship_explode.alive():
-        running = False
+        game_over = True
 
     # Draw / render
     screen.fill(ui_settings.BLACK)

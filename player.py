@@ -7,12 +7,15 @@ from pygame.sprite import Sprite
 import random
 from bullet import Bullet
 
+
 class Player(Sprite):
     """sprite for Player."""
+
     def __init__(self, ui_settings):
         super().__init__()
         self.ui_settings = ui_settings
-        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'playerShip.png')).convert_alpha()
+        self.image = pygame.image.load(os.path.join(
+            ui_settings.images_path, 'playerShip.png')).convert_alpha()
         self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'expl1.ogg'))
         self.image.set_colorkey(ui_settings.WHITE)
         self.rect = self.image.get_rect()
@@ -24,7 +27,16 @@ class Player(Sprite):
         self.seedx = 0
         self.shield = 100
         self.hidden = False
+        self.shoot_delay = 250
         self.hide_timer = pygame.time.get_ticks()
+        self.power = 1
+        self.power_time = pygame.time.get_ticks()
+        self.last_shoot = pygame.time.get_ticks()
+
+    def powerup(self):
+        if self.power < 3:
+            self.power += 1
+            self.power_time = pygame.time.get_ticks()
 
     def rotate(self):
         self.rot = 0
@@ -32,7 +44,11 @@ class Player(Sprite):
         self.last_update = pygame.tim
 
     def update(self):
-        # self.rect.top -= 3
+        # timeer for powerups.
+        if self.power >= 2 and pygame.time.get_ticks() - self.power_time > self.ui_settings.POWER_UP_TIME:
+            self.power = 1
+            self.power_time = pygame.time.get_ticks()
+
         # undide ship if hiddenself.
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
@@ -62,3 +78,19 @@ class Player(Sprite):
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
         self.rect.center = (self.ui_settings.WIDTH / 2, self.ui_settings.HEIGHT + 200)
+
+    def shoot(self):
+        # now = pygame.time.get_ticks()
+        # # if now - self.last_shoot > self.shoot_delay:
+        # self.last_shoot = now
+        self.bullets = []
+        if self.power == 1:
+            self.bullets.append(Bullet(self.ui_settings, self.rect.centerx, self.rect.top))
+        elif self.power == 2:
+            self.bullets.append(Bullet(self.ui_settings, self.rect.left, self.rect.centery))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.right, self.rect.centery))
+        elif self.power == 3:
+            self.bullets.append(Bullet(self.ui_settings, self.rect.centerx, self.rect.top))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.left, self.rect.centery))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.right, self.rect.centery))
+        self.bullets[0].effects.play()
