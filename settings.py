@@ -11,8 +11,8 @@ class Settings():
         # Scree constant settings.
         # pygame.init()
         pygame.mixer.init()
-        self.WIDTH = 800
-        self.HEIGHT = 600
+        self.WIDTH = 1024
+        self.HEIGHT = 800
         self.FPS = 50
         self.POWER_UP_TIME = 5000  # milliseconds
 
@@ -32,7 +32,7 @@ class Settings():
         self.default_font = pygame.font.match_font('arial')
 
         # Players lives limit
-        self.lives_limit = 1
+        self.lives_limit = 3
 
         # Set sound effects
         self.backgroundMusic = pygame.mixer.music.load(os.path.join(self.sfx_path, 'intro.ogg'))
@@ -42,6 +42,7 @@ class Settings():
         # Define life Bars.
         self.LIFE_BAR_LENGTH = 100
         self.LIFE_BAR_HEIGHT = 10
+
 
     def play_music(self):
         pygame.mixer.music.play(-1)

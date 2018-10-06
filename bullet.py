@@ -8,20 +8,23 @@ import random
 import pygame
 from pygame.sprite import Sprite
 
+
 class Bullet(Sprite):
     """docstring for Bullte."""
-    def __init__(self, ui_settings, x, y, direction = 0):
+
+    def __init__(self, ui_settings, x, y, speedy=0, direction=0):
         super().__init__()
         self.ui_settings = ui_settings
         # self.ship = player
-        self.image = pygame.image.load(os.path.join(ui_settings.images_path, 'shot1.png')).convert()
+        self.image = pygame.image.load(os.path.join(
+            ui_settings.images_path, 'laserRed16.png')).convert()
         self.image.set_colorkey(self.ui_settings.WHITE)
         self.rect = self.image.get_rect()
         # self.ship_rect = self.ship.rect
-        self.rect.centerx = x #self.ship_rect.centerx
-        self.rect.bottom = y #self.ship_rect.top
+        self.rect.centerx = x  # self.ship_rect.centerx
+        self.rect.bottom = y  # self.ship_rect.top
         self.direction = direction
-        self.speedy = -10
+        self.speedy = speedy
         self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'sfx_laser2.ogg'))
         self.effects.set_volume(0.1)
 

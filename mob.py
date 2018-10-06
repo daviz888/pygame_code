@@ -6,14 +6,17 @@ import pygame
 from pygame.sprite import Sprite
 import random
 
+
 class Mob(Sprite):
     """docstring for Mod."""
+
     def __init__(self, ui_settings):
         super().__init__()
         self.ui_settings = ui_settings
-        self.file_name = str(random.randrange(0,9)) + '.png'
-        self.image = pygame.image.load(os.path.join(ui_settings.images_path, self.file_name)).convert_alpha()
-        self.image = pygame.transform.scale(self.image,(40, 40))
+        self.file_name = str(random.randrange(0, 5)) + '.png'
+        self.image = pygame.image.load(os.path.join(
+            ui_settings.images_path, self.file_name)).convert_alpha()
+        # self.image = pygame.transform.scale(self.image,(40, 40))
         # self.image.set_colorkey(ui_settings.BLACK)
         # self.effects = pygame.mixer.Sound(os.path.join(ui_settings.sfx_path, 'expl1.ogg'))
         # self.effects.set_volume(0.1)

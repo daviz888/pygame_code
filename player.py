@@ -41,14 +41,13 @@ class Player(Sprite):
     def rotate(self):
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
-        self.last_update = pygame.tim
+        self.last_update = pygame.time.get_ticks()
 
     def update(self):
         # timeer for powerups.
         if self.power >= 2 and pygame.time.get_ticks() - self.power_time > self.ui_settings.POWER_UP_TIME:
             self.power = 1
             self.power_time = pygame.time.get_ticks()
-
         # undide ship if hiddenself.
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
@@ -85,12 +84,12 @@ class Player(Sprite):
         # self.last_shoot = now
         self.bullets = []
         if self.power == 1:
-            self.bullets.append(Bullet(self.ui_settings, self.rect.centerx, self.rect.top))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.centerx, self.rect.top, -10))
         elif self.power == 2:
-            self.bullets.append(Bullet(self.ui_settings, self.rect.left, self.rect.centery))
-            self.bullets.append(Bullet(self.ui_settings, self.rect.right, self.rect.centery))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.left, self.rect.centery, -10))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.right, self.rect.centery, -10))
         elif self.power == 3:
-            self.bullets.append(Bullet(self.ui_settings, self.rect.centerx, self.rect.top))
-            self.bullets.append(Bullet(self.ui_settings, self.rect.left, self.rect.centery))
-            self.bullets.append(Bullet(self.ui_settings, self.rect.right, self.rect.centery))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.centerx, self.rect.top, -10))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.left, self.rect.centery, -10))
+            self.bullets.append(Bullet(self.ui_settings, self.rect.right, self.rect.centery, -10))
         self.bullets[0].effects.play()
